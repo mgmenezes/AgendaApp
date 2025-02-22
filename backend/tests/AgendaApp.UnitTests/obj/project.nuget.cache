@@ -1,0 +1,45 @@
+{
+  "version": 2,
+  "dgSpecHash": "30ugSIyB1ho=",
+  "success": false,
+  "projectFilePath": "C:\\Users\\moise\\Documents\\Schedule_App\\backend\\tests\\AgendaApp.UnitTests\\AgendaApp.UnitTests.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1100",
+      "level": "Error",
+      "message": "Não foi possível resolver 'coverlet.collector (>= 6.0.2)' para 'net9.0'.",
+      "libraryId": "coverlet.collector",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1100",
+      "level": "Error",
+      "message": "Não foi possível resolver 'Microsoft.NET.Test.Sdk (>= 17.12.0)' para 'net9.0'.",
+      "libraryId": "Microsoft.NET.Test.Sdk",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1100",
+      "level": "Error",
+      "message": "Não foi possível resolver 'xunit (>= 2.9.2)' para 'net9.0'.",
+      "libraryId": "xunit",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1100",
+      "level": "Error",
+      "message": "Não foi possível resolver 'xunit.runner.visualstudio (>= 2.8.2)' para 'net9.0'.",
+      "libraryId": "xunit.runner.visualstudio",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    }
+  ]
+}

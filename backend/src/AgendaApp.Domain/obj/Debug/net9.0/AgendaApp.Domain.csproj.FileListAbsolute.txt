@@ -1,0 +1,11 @@
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\obj\Debug\net9.0\AgendaApp.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\obj\Debug\net9.0\AgendaApp.Domain.AssemblyInfoInputs.cache
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\obj\Debug\net9.0\AgendaApp.Domain.AssemblyInfo.cs
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\obj\Debug\net9.0\AgendaApp.Domain.csproj.CoreCompileInputs.cache
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\bin\Debug\net9.0\AgendaApp.Domain.deps.json
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\bin\Debug\net9.0\AgendaApp.Domain.dll
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\bin\Debug\net9.0\AgendaApp.Domain.pdb
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\obj\Debug\net9.0\AgendaApp.Domain.dll
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\obj\Debug\net9.0\refint\AgendaApp.Domain.dll
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\obj\Debug\net9.0\AgendaApp.Domain.pdb
+C:\Users\moise\Documents\Schedule_App\backend\src\AgendaApp.Domain\obj\Debug\net9.0\ref\AgendaApp.Domain.dll

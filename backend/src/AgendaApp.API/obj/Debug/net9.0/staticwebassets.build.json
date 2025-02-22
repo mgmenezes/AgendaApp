@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "Yl+8oOIwTtMswSf9xGRgk0vn6t8j9kHsJc1PzF+km6c=",
+  "Source": "AgendaApp.API",
+  "BasePath": "_content/AgendaApp.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
