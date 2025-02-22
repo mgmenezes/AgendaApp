@@ -12,13 +12,15 @@ using AgendaApp.API.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", 
-        builder => builder
-            .AllowAnyOrigin()
+    options.AddPolicy("AllowAll",
+        policy => policy
+            .WithOrigins("http://localhost:5173")
             .AllowAnyMethod()
-            .AllowAnyHeader());
+            .AllowAnyHeader()
+            .AllowCredentials());
 });
 
 // Configuração básica dos serviços
@@ -28,11 +30,6 @@ builder.Services.AddControllers(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 7162;
-});
 
 // Configuração do DbContext
 builder.Services.AddDbContext<AgendaContext>(options =>
@@ -45,11 +42,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IContatoService, ContatoService>();
 builder.Services.AddScoped<IValidator<CriarContatoDto>, CriarContatoValidator>();
-builder.Services.AddScoped<IValidator<AtualizarContatoDto>, AtualizarContatoValidator>();
+// builder.Services.AddScoped<IValidator<AtualizarContatoDto>, AtualizarContatoValidator>();
 
 var app = builder.Build();
-
-
 
 // Configuração do pipeline HTTP
 if (app.Environment.IsDevelopment())
@@ -57,8 +52,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors("AllowAll");
-app.UseHttpsRedirection();
+
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();

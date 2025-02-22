@@ -13,8 +13,10 @@ namespace AgendaApp.Application.Mappings
             CreateMap<Contato, ContatoDto>();
 
             // Mapeamento de CriarContatoDto para Contato
-            CreateMap<CriarContatoDto, Contato>()
-                .ConstructUsing(dto => new Contato(dto.Nome, dto.Email, dto.Telefone));
+            CreateMap<CriarContatoDto, Contato>();
+
+            // Mapeamento de AtualizarContatoDto para Contato
+            CreateMap<AtualizarContatoDto, Contato>();
         }
     }
 }

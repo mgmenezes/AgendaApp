@@ -66,7 +66,7 @@ namespace AgendaApp.Infrastructure.Repositories
             var contato = await ObterPorIdAsync(id);
             if (contato != null)
             {
-                contato.Inativar();
+                contato.Ativo = false;
                 _context.Contatos.Update(contato);
             }
         }

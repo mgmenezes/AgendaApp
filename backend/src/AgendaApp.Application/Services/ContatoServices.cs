@@ -14,20 +14,21 @@ namespace AgendaApp.Application.Services
     public class ContatoService : IContatoService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+                private readonly IMapper _mapper;
         private readonly IValidator<CriarContatoDto> _criarValidator;
-        private readonly IValidator<AtualizarContatoDto> _atualizarValidator;
+        // private readonly IValidator<AtualizarContatoDto> _atualizarValidator;
 
         public ContatoService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IValidator<CriarContatoDto> criarValidator,
-            IValidator<AtualizarContatoDto> atualizarValidator)
+            IValidator<CriarContatoDto> criarValidator
+            // IValidator<AtualizarContatoDto> atualizarValidator
+            )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _criarValidator = criarValidator;
-            _atualizarValidator = atualizarValidator;
+            // _atualizarValidator = atualizarValidator;
         }
 
         // Implementação dos métodos da interface
@@ -56,7 +57,7 @@ namespace AgendaApp.Application.Services
                 throw new ValidationException("Email já cadastrado");
 
             // Criação do novo contato
-            var contato = new Contato(dto.Nome, dto.Email, dto.Telefone);
+            var contato = _mapper.Map<Contato>(dto);
             await _unitOfWork.ContatoRepository.AdicionarAsync(contato);
             await _unitOfWork.CommitAsync();
 
@@ -65,10 +66,6 @@ namespace AgendaApp.Application.Services
 
         public async Task<ContatoDto> AtualizarAsync(AtualizarContatoDto dto)
         {
-            // Validação dos dados de entrada
-            await _atualizarValidator.ValidateAndThrowAsync(dto);
-
-            // Busca o contato existente
             var contato = await _unitOfWork.ContatoRepository.ObterPorIdAsync(dto.Id);
             if (contato == null)
                 throw new NotFoundException($"Contato com Id {dto.Id} não encontrado");
@@ -79,11 +76,12 @@ namespace AgendaApp.Application.Services
                 throw new ValidationException("Email já está em uso por outro contato");
 
             // Atualiza os dados
-            contato.AtualizarDados(dto.Nome, dto.Email, dto.Telefone);
-            await _unitOfWork.ContatoRepository.AtualizarAsync(contato);
+            var contatoAtualizado = _mapper.Map(dto, contato);
+            contatoAtualizado.DataAtualizacao = DateTime.UtcNow;
+            await _unitOfWork.ContatoRepository.AtualizarAsync(contatoAtualizado);
             await _unitOfWork.CommitAsync();
 
-            return _mapper.Map<ContatoDto>(contato);
+            return _mapper.Map<ContatoDto>(contatoAtualizado);
         }
 
         public async Task InativarAsync(Guid id)
@@ -91,7 +89,7 @@ namespace AgendaApp.Application.Services
             var contato = await _unitOfWork.ContatoRepository.ObterPorIdAsync(id);
             if (contato == null)
                 throw new NotFoundException($"Contato com Id {id} não encontrado");
-
+            contato.DataAtualizacao = DateTime.UtcNow;
             await _unitOfWork.ContatoRepository.InativarAsync(id);
             await _unitOfWork.CommitAsync();
         }
