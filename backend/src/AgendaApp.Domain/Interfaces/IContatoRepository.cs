@@ -6,8 +6,13 @@ using AgendaApp.Domain.Entities;
 
 namespace AgendaApp.Domain.Interfaces
 {
-      public interface IContatoRepository
+    public interface IContatoRepository
     {
+        Task<IEnumerable<Contato>> GetAllAsync();
+        Task<Contato> GetByIdAsync(Guid id);
+        Task AddAsync(Contato contato);
+        Task UpdateAsync(Contato contato);
+        Task DeleteAsync(Guid id);
         Task<Contato?> ObterPorIdAsync(Guid id);  // Adicionando o ? para indicar que pode ser nulo
         Task<IEnumerable<Contato>> ObterTodosAsync();
         Task<IEnumerable<Contato>> ObterAtivosAsync();

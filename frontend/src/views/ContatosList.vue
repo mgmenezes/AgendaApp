@@ -6,11 +6,14 @@ import { ContatoService } from '../services/ContatoService'
 import type { Contato } from '../types/Contato'
 // import Button from 'primevue/button';
 import ProgressSpinner from 'primevue/progressspinner';
+import { useToast } from 'primevue/usetoast'
+import Toast from 'primevue/toast'
 
 const contatos = ref<Contato[]>([])
 const router = useRouter()
 const isLoading = ref(true)
 const errorMessage = ref<string | null>(null)
+const toast = useToast()
 
 async function loadContatos() {
   try {
@@ -29,8 +32,20 @@ const handleInativar = async (id: string) => {
   try {
     await ContatoService.inativar(id)
     await loadContatos()
+    toast.add({
+      severity: 'success',
+      summary: 'Sucesso',
+      detail: 'Contato removido com sucesso!',
+      life: 3000
+    })
   } catch (error) {
-    errorMessage.value = 'Erro ao inativar o contato.'
+    console.error('Erro ao inativar contato:', error)
+    toast.add({
+      severity: 'error',
+      summary: 'Erro',
+      detail: 'Não foi possível remover o contato. Tente novamente.',
+      life: 3000
+    })
   }
 }
 
@@ -39,6 +54,7 @@ onMounted(loadContatos)
 
 <template>
   <div class="container">
+    <Toast />
     <!-- Header com título e botão -->
     <div class="header">
       <h1 class="title">Agenda de Contatos</h1>
@@ -230,6 +246,9 @@ onMounted(loadContatos)
   display: flex;
   align-items: center;
   margin-bottom: 8px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .contact-info i {

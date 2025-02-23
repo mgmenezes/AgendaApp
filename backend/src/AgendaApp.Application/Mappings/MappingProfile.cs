@@ -2,6 +2,7 @@
 using AutoMapper;
 using AgendaApp.Domain.Entities;
 using AgendaApp.Application.DTOs;
+using AgendaApp.Application.Commands.Contatos.AtualizarContato;
 
 namespace AgendaApp.Application.Mappings
 {
@@ -17,6 +18,9 @@ namespace AgendaApp.Application.Mappings
 
             // Mapeamento de AtualizarContatoDto para Contato
             CreateMap<AtualizarContatoDto, Contato>();
+
+            // Mapeamento de AtualizarContatoCommand para Contato
+            CreateMap<AtualizarContatoCommand, Contato>();
         }
     }
 }

@@ -7,6 +7,7 @@ import { ContatoService } from '../services/ContatoService'
 import type { ContatoInput } from '../types/Contato'
 import { useToast } from 'primevue/usetoast'
 import Toast from 'primevue/toast'
+import ProgressSpinner from 'primevue/progressspinner'
 
 // Definindo o estado inicial do formulário
 const initialState: ContatoInput = {
@@ -47,6 +48,7 @@ const v$ = useVuelidate(rules, formData)
 // Obtendo router e route para navegação e acesso aos parâmetros
 const router = useRouter()
 const route = useRoute()
+const id = route.params.id as string
 
 // Verifica se estamos no modo de edição
 const isEditMode = computed(() => route.params.id !== undefined)
@@ -54,27 +56,49 @@ const isEditMode = computed(() => route.params.id !== undefined)
 // Após as outras constantes declaradas
 const toast = useToast()
 
+// Adicione estas refs
+const isLoading = ref(false);
+const errorMessage = ref<string | null>(null);
+
 // Função para carregar os dados do contato em modo de edição
 async function loadContato() {
-  if (isEditMode.value) {
+  if (id) {
     try {
-      const id = route.params.id as string
-      const contato = await ContatoService.obterPorId(id)
-      console.log('Contato carregado:', contato)
+      isLoading.value = true;
+      const contato = await ContatoService.obterPorId(id);
+      
+      // Verifica se o contato foi retornado
+      if (!contato) {
+        throw new Error('Contato não encontrado');
+      }
+
+      // Atualiza o formData com os dados do contato
       formData.value = {
         id: contato.id,
         nome: contato.nome,
         email: contato.email,
         telefone: contato.telefone
-      }
+      };
+
     } catch (error) {
-      console.error('Erro ao carregar contato:', error)
-      router.push('/')
+      console.error('Erro ao carregar contato:', error);
+      toast.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Não foi possível carregar os dados do contato',
+        life: 3000
+      });
+      // Redireciona para a lista após erro
+      setTimeout(() => {
+        router.push('/agenda');
+      }, 2000);
+    } finally {
+      isLoading.value = false;
     }
   }
 }
 
-async function handleSubmit() {
+const handleSubmit = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) {
     toast.add({
@@ -87,8 +111,8 @@ async function handleSubmit() {
   }
   
   try {
-    if (isEditMode.value) {
-      await ContatoService.atualizar(route.params.id as string, formData.value)
+    if (id) {
+      await ContatoService.atualizar(id, formData.value)
       toast.add({
         severity: 'success',
         summary: 'Sucesso',
@@ -135,74 +159,85 @@ function formatarTelefone(value: string): string {
   return value
 }
 
-onMounted(loadContato)
+onMounted(() => {
+  loadContato();
+});
 </script>
 
 <template>
   <div class="card p-4">
     <Toast />
-    <h1 class="text-2xl mb-4">
-      {{ isEditMode ? 'Editar Contato' : 'Novo Contato' }}
-    </h1>
+    
+    <!-- Loading state -->
+    <div v-if="isLoading" class="flex justify-center items-center h-64">
+      <ProgressSpinner />
+    </div>
 
-    <form @submit.prevent="handleSubmit" class="max-w-lg">
-      <div class="field mb-4">
-        <label for="nome" class="block mb-2">Nome</label>
-        <PInputText
-          id="nome"
-          v-model="formData.nome"
-          :class="{ 'p-invalid': v$.nome.$error }"
-          class="w-full"
-        />
-        <small class="p-error" v-if="v$.nome.$error">
-          {{ v$.nome.$errors[0].$message }}
-        </small>
-      </div>
+    <!-- Form content -->
+    <div v-else>
+      <h1 class="text-2xl mb-4">
+        {{ isEditMode ? 'Editar Contato' : 'Novo Contato' }}
+      </h1>
 
-      <div class="field mb-4">
-        <label for="email" class="block mb-2">Email</label>
-        <PInputText
-          id="email"
-          v-model="formData.email"
-          :class="{ 'p-invalid': v$.email.$error }"
-          class="w-full"
-        />
-        <small class="p-error" v-if="v$.email.$error">
-          {{ v$.email.$errors[0].$message }}
-        </small>
-      </div>
+      <form @submit.prevent="handleSubmit" class="max-w-lg">
+        <div class="field mb-4">
+          <label for="nome" class="block mb-2">Nome</label>
+          <PInputText
+            id="nome"
+            v-model="formData.nome"
+            :class="{ 'p-invalid': v$.nome.$error }"
+            class="w-full"
+          />
+          <small class="p-error" v-if="v$.nome.$error">
+            {{ v$.nome.$errors[0].$message }}
+          </small>
+        </div>
 
-      <div class="field mb-4">
-        <label for="telefone" class="block mb-2">Telefone</label>
-        <PInputText
-          id="telefone"
-          v-model="formData.telefone"
-          placeholder="(99)99999-9999"
-          maxlength="13"
-          :class="{ 'p-invalid': v$.telefone.$error }"
-          class="w-full"
-        />
-        <small class="p-error" v-if="v$.telefone.$error">
-          {{ v$.telefone.$errors[0].$message }}
-        </small>
-      </div>
+        <div class="field mb-4">
+          <label for="email" class="block mb-2">Email</label>
+          <PInputText
+            id="email"
+            v-model="formData.email"
+            :class="{ 'p-invalid': v$.email.$error }"
+            class="w-full"
+          />
+          <small class="p-error" v-if="v$.email.$error">
+            {{ v$.email.$errors[0].$message }}
+          </small>
+        </div>
 
-      <div class="flex gap-2">
-        <PButton
-          type="submit"
-          label="Salvar"
-          icon="pi pi-check"
-          class="p-button-primary"
-          
-        />
-        <PButton
-          type="button"
-          label="Cancelar"
-          icon="pi pi-times"
-          class="p-button-secondary"
-          @click="router.push('/')"
-        />
-      </div>
-    </form>
+        <div class="field mb-4">
+          <label for="telefone" class="block mb-2">Telefone</label>
+          <PInputText
+            id="telefone"
+            v-model="formData.telefone"
+            placeholder="(99)99999-9999"
+            maxlength="13"
+            :class="{ 'p-invalid': v$.telefone.$error }"
+            class="w-full"
+          />
+          <small class="p-error" v-if="v$.telefone.$error">
+            {{ v$.telefone.$errors[0].$message }}
+          </small>
+        </div>
+
+        <div class="flex gap-2">
+          <PButton
+            type="submit"
+            label="Salvar"
+            icon="pi pi-check"
+            class="p-button-primary"
+            
+          />
+          <PButton
+            type="button"
+            label="Cancelar"
+            icon="pi pi-times"
+            class="p-button-secondary"
+            @click="router.push('/agenda')"
+          />
+        </div>
+      </form>
+    </div>
   </div>
 </template>

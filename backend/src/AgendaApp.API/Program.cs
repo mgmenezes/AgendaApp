@@ -9,6 +9,13 @@ using AgendaApp.Application.DTOs;
 using AgendaApp.Application.Validators;
 using FluentValidation;
 using AgendaApp.API.Filters;
+using AgendaApp.Application.MessageBus.Interfaces;
+using MediatR;
+using AgendaApp.Application.Commands.Contatos.CriarContato;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using AgendaApp.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,10 +46,33 @@ builder.Services.AddDbContext<AgendaContext>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Registro dos serviços
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IContatoService, ContatoService>();
 builder.Services.AddScoped<IValidator<CriarContatoDto>, CriarContatoValidator>();
+builder.Services.AddSingleton<IMessageBusService, RabbitMQService>();
+builder.Services.AddHostedService<ContatoConsumer>();
 // builder.Services.AddScoped<IValidator<AtualizarContatoDto>, AtualizarContatoValidator>();
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CriarContatoCommand).Assembly));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+
 
 var app = builder.Build();
 
@@ -56,6 +86,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAll");
 
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

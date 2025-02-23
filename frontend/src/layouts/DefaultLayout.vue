@@ -1,12 +1,25 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
+import { AuthService } from '@/services/auth/authService';
+const handleLogout = () => {
+  AuthService.removeToken(); // Remove o token do localStorage
+  router.push('/login'); // Redireciona para a página de login
+};
+
+const router = useRouter();
+
+router.push('/login');
 </script>
 
 <template>
   <div class="layout-container">
     <header class="header">
-      <!-- <nav class="nav-container">
-        <h1 class="app-title">Agenda App</h1>
-      </nav> -->
+      <nav class="nav-container">
+        <PButton
+        v-if="AuthService.isAuthenticated()" 
+          @click="handleLogout" 
+          class="logout-button">Sair</PButton>
+      </nav>
     </header>
 
     <main class="main-container">
@@ -27,11 +40,10 @@
 
 /* Estilização do header */
 .header {
+  width: 59rem;	
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  align-items: flex-end;
+  justify-content: flex-end;
   border-radius: 0.5rem;
 }
 
@@ -39,8 +51,8 @@
 .nav-container {
   width: 50rem; 
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  justify-content: center;
 }
 
 /* Título da aplicação */
@@ -57,6 +69,20 @@
   padding: 24px 16px; /* Equivalente ao py-6 */
   width: 100%;
   flex: 1;
+}
+.logout-button {
+  background-color: #ef4444;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #dc2626;
 }
 
 /* Media queries para responsividade */

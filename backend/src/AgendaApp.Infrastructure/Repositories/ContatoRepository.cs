@@ -70,5 +70,35 @@ namespace AgendaApp.Infrastructure.Repositories
                 _context.Contatos.Update(contato);
             }
         }
+
+        public async Task AddAsync(Contato contato)
+        {
+            await _context.Contatos.AddAsync(contato);
+        }
+
+        public async Task<IEnumerable<Contato>> GetAllAsync()
+        {
+            return await ObterTodosAsync();
+        }
+
+        public async Task<Contato> GetByIdAsync(Guid id)
+        {
+            return await _context.Contatos.FindAsync(id);
+        }
+
+        public async Task UpdateAsync(Contato contato)
+        {
+            await AtualizarAsync(contato);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var contato = await _context.Contatos.FindAsync(id);
+            if (contato != null)
+            {
+                _context.Contatos.Remove(contato); // Remove permanentemente
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

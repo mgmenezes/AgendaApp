@@ -20,7 +20,6 @@ const openGitHubRepo = () => {
       </nav>
 
       <div class="main-content">
-        <h2 class="description">Desafio  Blue Technology utilizando .Net e VueJs.</h2>
         <div class="tech-description">
           <h2 class="description">Desafio Blue Technology utilizando</h2>
           <div class="tech-icons">

@@ -8,26 +8,30 @@ using AgendaApp.Domain.Entities;
 using AgendaApp.Domain.Interfaces;
 using AgendaApp.Application.DTOs;
 using AgendaApp.Application.Interfaces;
-
+using AgendaApp.Application.MessageBus.Interfaces;
 namespace AgendaApp.Application.Services
 {
     public class ContatoService : IContatoService
+
     {
         private readonly IUnitOfWork _unitOfWork;
                 private readonly IMapper _mapper;
         private readonly IValidator<CriarContatoDto> _criarValidator;
         // private readonly IValidator<AtualizarContatoDto> _atualizarValidator;
+        private readonly IMessageBusService _messageBusService;
 
         public ContatoService(
             IUnitOfWork unitOfWork,
             IMapper mapper,
-            IValidator<CriarContatoDto> criarValidator
+            IValidator<CriarContatoDto> criarValidator,
+            IMessageBusService messageBusService
             // IValidator<AtualizarContatoDto> atualizarValidator
             )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _criarValidator = criarValidator;
+            _messageBusService = messageBusService;
             // _atualizarValidator = atualizarValidator;
         }
 
@@ -61,6 +65,9 @@ namespace AgendaApp.Application.Services
             await _unitOfWork.ContatoRepository.AdicionarAsync(contato);
             await _unitOfWork.CommitAsync();
 
+            // Publicação da mensagem no RabbitMQ
+            _messageBusService.PublishMessage("contato-queue", contato);
+
             return _mapper.Map<ContatoDto>(contato);
         }
 
@@ -81,6 +88,9 @@ namespace AgendaApp.Application.Services
             await _unitOfWork.ContatoRepository.AtualizarAsync(contatoAtualizado);
             await _unitOfWork.CommitAsync();
 
+            // Publicação da mensagem no RabbitMQ
+            _messageBusService.PublishMessage("contato-queue", contatoAtualizado);
+
             return _mapper.Map<ContatoDto>(contatoAtualizado);
         }
 
@@ -92,6 +102,9 @@ namespace AgendaApp.Application.Services
             contato.DataAtualizacao = DateTime.UtcNow;
             await _unitOfWork.ContatoRepository.InativarAsync(id);
             await _unitOfWork.CommitAsync();
+
+            // Publicação da mensagem no RabbitMQ
+            _messageBusService.PublishMessage("contato-queue", contato);
         }
     }
 
