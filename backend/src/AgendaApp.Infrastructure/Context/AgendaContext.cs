@@ -1,4 +1,3 @@
-// AgendaApp.Infrastructure/Context/AgendaContext.cs
 using AgendaApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,8 +13,8 @@ namespace AgendaApp.Infrastructure.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
-            // Aplicamos todas as configurações de entidades definidas neste assembly
+
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AgendaContext).Assembly);
         }
     }

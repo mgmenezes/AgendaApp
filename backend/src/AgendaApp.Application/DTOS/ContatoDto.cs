@@ -1,4 +1,3 @@
-// AgendaApp.Application/DTOs/ContatoDto.cs
 namespace AgendaApp.Application.DTOs
 {
     public class ContatoDto

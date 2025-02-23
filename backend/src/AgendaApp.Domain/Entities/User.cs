@@ -1,4 +1,3 @@
-// AgendaApp.Domain/Entities/User.cs
 public class User
 {
     public Guid Id { get; private set; }

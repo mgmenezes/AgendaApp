@@ -1,4 +1,3 @@
-// Consumers/ContatoConsumer.cs
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
@@ -43,11 +42,10 @@ public class ContatoConsumer : BackgroundService
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
-            
+
             _logger.LogInformation($"Mensagem recebida: {message}");
-            
-            // Processa a mensagem
-            
+
+
             _channel.BasicAck(ea.DeliveryTag, false);
         };
 

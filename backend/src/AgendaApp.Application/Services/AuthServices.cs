@@ -1,4 +1,3 @@
-// AgendaApp.Application/Services/AuthService.cs
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -12,7 +11,6 @@ public interface IAuthService
     Task<UserResponseDto> LoginAsync(LoginDto loginDto);
 }
 
-// AgendaApp.Application/Services/AuthService.cs
 public class AuthService : IAuthService
 {
     private readonly IConfiguration _configuration;
@@ -41,7 +39,6 @@ public class AuthService : IAuthService
             throw new UnauthorizedAccessException("Email ou senha incorretos");
         }
 
-        // Para teste, comparação direta da senha
         if (user.PasswordHash != loginDto.Password)
         {
             _logger.LogWarning($"Senha incorreta para o usuário: {loginDto.Email}");
@@ -63,7 +60,7 @@ public class AuthService : IAuthService
     {
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? "chave_secreta_temporaria_para_teste"));
-        
+
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(

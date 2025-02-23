@@ -1,4 +1,3 @@
-// AgendaApp.Infrastructure/Configurations/ContatoConfiguration.cs
 using AgendaApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -23,11 +22,10 @@ namespace AgendaApp.Infrastructure.Configurations
                 .IsRequired()
                 .HasMaxLength(20);
 
-            // Criamos um índice único para email
             builder.HasIndex(c => c.Email)
                 .IsUnique();
 
-            // Configuramos o filtro global para só trazer registros ativos por padrão
+            // filtro global para só trazer registros ativos por padrão
             builder.HasQueryFilter(c => c.Ativo);
         }
     }

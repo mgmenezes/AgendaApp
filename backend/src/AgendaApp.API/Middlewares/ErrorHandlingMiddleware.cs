@@ -1,6 +1,3 @@
-// AgendaApp.API/Middlewares/ErrorHandlingMiddleware.cs
-
-
 namespace AgendaApp.API.Middlewares
 {
     public class ErrorHandlingMiddleware

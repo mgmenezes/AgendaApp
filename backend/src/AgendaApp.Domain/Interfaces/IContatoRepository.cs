@@ -1,7 +1,3 @@
-// AgendaApp.Domain/Interfaces/IContatoRepository.cs
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using AgendaApp.Domain.Entities;
 
 namespace AgendaApp.Domain.Interfaces
@@ -13,10 +9,10 @@ namespace AgendaApp.Domain.Interfaces
         Task AddAsync(Contato contato);
         Task UpdateAsync(Contato contato);
         Task DeleteAsync(Guid id);
-        Task<Contato?> ObterPorIdAsync(Guid id);  // Adicionando o ? para indicar que pode ser nulo
+        Task<Contato?> ObterPorIdAsync(Guid id);
         Task<IEnumerable<Contato>> ObterTodosAsync();
         Task<IEnumerable<Contato>> ObterAtivosAsync();
-        Task<Contato?> ObterPorEmailAsync(string email);  // Adicionando o ? aqui também
+        Task<Contato?> ObterPorEmailAsync(string email);
         Task<Contato> AdicionarAsync(Contato contato);
         Task AtualizarAsync(Contato contato);
         Task<bool> ExisteEmailAsync(string email);

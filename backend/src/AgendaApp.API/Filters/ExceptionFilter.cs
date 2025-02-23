@@ -1,4 +1,3 @@
-// AgendaApp.API/Filters/ExceptionFilter.cs
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using AgendaApp.Application.Exceptions;
@@ -21,7 +20,7 @@ namespace AgendaApp.API.Filters
             {
                 Message = "Ocorreu um erro ao processar sua requisição.",
                 ExceptionMessage = context.Exception.Message,
-                ValidationErrors = context.Exception is ValidationException validationEx 
+                ValidationErrors = context.Exception is ValidationException validationEx
                     ? validationEx.Errors?.Select(e => new { e.PropertyName, e.ErrorMessage })
                     : null
             });

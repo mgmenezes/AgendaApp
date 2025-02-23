@@ -1,8 +1,4 @@
-// AgendaApp.Application/Interfaces/IContatoService.cs
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AgendaApp.Application.DTOs;  // Adicionando a referência aos DTOs
+using AgendaApp.Application.DTOs;
 
 namespace AgendaApp.Application.Interfaces
 {

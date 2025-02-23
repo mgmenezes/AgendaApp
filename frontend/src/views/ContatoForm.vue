@@ -1,96 +1,84 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useVuelidate } from '@vuelidate/core'
-import { required, email, helpers } from '@vuelidate/validators'
-import { ContatoService } from '../services/ContatoService'
-import type { ContatoInput } from '../types/Contato'
-import { useToast } from 'primevue/usetoast'
-import Toast from 'primevue/toast'
-import ProgressSpinner from 'primevue/progressspinner'
+import { ref, onMounted, computed } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useVuelidate } from "@vuelidate/core";
+import { required, email, helpers } from "@vuelidate/validators";
+import { ContatoService } from "../services/ContatoService";
+import type { ContatoInput } from "../types/Contato";
+import { useToast } from "primevue/usetoast";
+import Toast from "primevue/toast";
+import ProgressSpinner from "primevue/progressspinner";
 
-// Definindo o estado inicial do formulário
 const initialState: ContatoInput = {
-  id: '',
-  nome: '',
-  email: '',
-  telefone: ''
-}
+  id: "",
+  nome: "",
+  email: "",
+  telefone: "",
+};
 
-// Criando referência reativa para os dados do formulário
-const formData = ref<ContatoInput>({ ...initialState })
+const formData = ref<ContatoInput>({ ...initialState });
 
-// Configurando as regras de validação
 const rules = {
-  nome: { 
-    required: helpers.withMessage('Nome é obrigatório', required),
+  nome: {
+    required: helpers.withMessage("Nome é obrigatório", required),
     minLength: helpers.withMessage(
-      'Nome deve ter pelo menos 10 caracteres',
+      "Nome deve ter pelo menos 10 caracteres",
       (value: string) => value.length >= 10
-    )
+    ),
   },
-  email: { 
-    required: helpers.withMessage('Email é obrigatório', required),
-    email: helpers.withMessage('Email inválido', email)
+  email: {
+    required: helpers.withMessage("Email é obrigatório", required),
+    email: helpers.withMessage("Email inválido", email),
   },
   telefone: {
-    // required: helpers.withMessage('Telefone é obrigatório', required),
-    // format: helpers.withMessage(
-    //   'Telefone deve estar no formato (99) 99999-9999',
-    //   (value: string) => /^\(\d{2}\) \d{5}-\d{4}$/.test(value)
-    // )
-  }
-}
+    required: helpers.withMessage("Telefone é obrigatório", required),
+    format: helpers.withMessage(
+      "Telefone deve estar no formato (99) 99999-9999",
+      (value: string) => /^\(\d{2}\) \d{5}-\d{4}$/.test(value)
+    ),
+  },
+};
 
-// Instanciando o validador
-const v$ = useVuelidate(rules, formData)
+const v$ = useVuelidate(rules, formData);
 
-// Obtendo router e route para navegação e acesso aos parâmetros
-const router = useRouter()
-const route = useRoute()
-const id = route.params.id as string
+const router = useRouter();
+const route = useRoute();
+const id = route.params.id as string;
 
-// Verifica se estamos no modo de edição
-const isEditMode = computed(() => route.params.id !== undefined)
+const isEditMode = computed(() => route.params.id !== undefined);
 
-// Após as outras constantes declaradas
-const toast = useToast()
+const toast = useToast();
 
-// Adicione estas refs
 const isLoading = ref(false);
 const errorMessage = ref<string | null>(null);
 
-// Função para carregar os dados do contato em modo de edição
 async function loadContato() {
   if (id) {
     try {
       isLoading.value = true;
       const contato = await ContatoService.obterPorId(id);
-      
-      // Verifica se o contato foi retornado
+
       if (!contato) {
-        throw new Error('Contato não encontrado');
+        throw new Error("Contato não encontrado");
       }
 
-      // Atualiza o formData com os dados do contato
       formData.value = {
         id: contato.id,
         nome: contato.nome,
         email: contato.email,
-        telefone: contato.telefone
+        telefone: contato.telefone,
       };
-
     } catch (error) {
-      console.error('Erro ao carregar contato:', error);
+      console.error("Erro ao carregar contato:", error);
       toast.add({
-        severity: 'error',
-        summary: 'Erro',
-        detail: 'Não foi possível carregar os dados do contato',
-        life: 3000
+        severity: "error",
+        summary: "Erro",
+        detail: "Não foi possível carregar os dados do contato",
+        life: 3000,
       });
-      // Redireciona para a lista após erro
+
       setTimeout(() => {
-        router.push('/agenda');
+        router.push("/agenda");
       }, 2000);
     } finally {
       isLoading.value = false;
@@ -99,64 +87,68 @@ async function loadContato() {
 }
 
 const handleSubmit = async () => {
-  const isValid = await v$.value.$validate()
+  const isValid = await v$.value.$validate();
   if (!isValid) {
     toast.add({
-      severity: 'error',
-      summary: 'Erro de validação',
-      detail: 'Por favor, verifique os campos obrigatórios',
-      life: 3000
-    })
-    return
+      severity: "error",
+      summary: "Erro de validação",
+      detail: "Por favor, verifique os campos obrigatórios",
+      life: 3000,
+    });
+    return;
   }
-  
+
   try {
     if (id) {
-      await ContatoService.atualizar(id, formData.value)
+      await ContatoService.atualizar(id, formData.value);
       toast.add({
-        severity: 'success',
-        summary: 'Sucesso',
-        detail: 'Contato atualizado com sucesso!',
-        life: 3000
-      })
+        severity: "success",
+        summary: "Sucesso",
+        detail: "Contato atualizado com sucesso!",
+        life: 3000,
+      });
     } else {
-      await ContatoService.criar(formData.value)
+      await ContatoService.criar(formData.value);
       toast.add({
-        severity: 'success',
-        summary: 'Sucesso',
-        detail: 'Contato cadastrado com sucesso!',
-        life: 3000
-      })
+        severity: "success",
+        summary: "Sucesso",
+        detail: "Contato cadastrado com sucesso!",
+        life: 3000,
+      });
     }
-    
-    // Adicionando um pequeno delay antes do redirecionamento
-    setTimeout(() => {
-      router.push('/agenda')
-    }, 1000)
-  } catch (error) {
-    console.error('Erro ao salvar contato:', error)
-    toast.add({
-      severity: 'error',
-      summary: 'Erro',
-      detail: 'Erro ao salvar o contato. Tente novamente.',
-      life: 3000
-    })
-  }
-}
 
-// Função para formatar o telefone
-function formatarTelefone(value: string): string {
-  // Remove todos os caracteres não numéricos
-  const numbers = value.replace(/\D/g, '')
-  
-  // Aplica a máscara
-  if (numbers.length <= 11) {
-    return numbers.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
-      .replace(/(\d{2})(\d{0,5})/, '($1) $2')
-      .replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3')
-      .trim()
+    setTimeout(() => {
+      router.push("/agenda");
+    }, 1000);
+  } catch (error) {
+    console.error("Erro ao salvar contato:", error);
+    toast.add({
+      severity: "error",
+      summary: "Erro",
+      detail: "Erro ao salvar o contato. Tente novamente.",
+      life: 3000,
+    });
   }
-  return value
+};
+
+function formatarTelefone(value: string): string {
+  // Remove tudo que não for número
+  const numbers = value.replace(/\D/g, "");
+
+  // Limita a 11 dígitos
+  const limitedNumbers = numbers.slice(0, 11);
+
+  // Aplica a máscara
+  if (limitedNumbers.length <= 2) {
+    return `(${limitedNumbers}`;
+  }
+  if (limitedNumbers.length <= 7) {
+    return `(${limitedNumbers.slice(0, 2)}) ${limitedNumbers.slice(2)}`;
+  }
+  return `(${limitedNumbers.slice(0, 2)}) ${limitedNumbers.slice(
+    2,
+    7
+  )}-${limitedNumbers.slice(7)}`;
 }
 
 onMounted(() => {
@@ -167,7 +159,7 @@ onMounted(() => {
 <template>
   <div class="card p-4">
     <Toast />
-    
+
     <!-- Loading state -->
     <div v-if="isLoading" class="flex justify-center items-center h-64">
       <ProgressSpinner />
@@ -176,7 +168,7 @@ onMounted(() => {
     <!-- Form content -->
     <div v-else>
       <h1 class="text-2xl mb-4">
-        {{ isEditMode ? 'Editar Contato' : 'Novo Contato' }}
+        {{ isEditMode ? "Editar Contato" : "Novo Contato" }}
       </h1>
 
       <form @submit.prevent="handleSubmit" class="max-w-lg">
@@ -211,10 +203,11 @@ onMounted(() => {
           <PInputText
             id="telefone"
             v-model="formData.telefone"
-            placeholder="(99)99999-9999"
-            maxlength="13"
+            placeholder="(99) 99999-9999"
+            maxlength="15"
             :class="{ 'p-invalid': v$.telefone.$error }"
             class="w-full"
+            @input="formData.telefone = formatarTelefone($event.target.value)"
           />
           <small class="p-error" v-if="v$.telefone.$error">
             {{ v$.telefone.$errors[0].$message }}
@@ -227,7 +220,6 @@ onMounted(() => {
             label="Salvar"
             icon="pi pi-check"
             class="p-button-primary"
-            
           />
           <PButton
             type="button"

@@ -1,5 +1,3 @@
-using AgendaApp.Domain.Entities;
-
 namespace AgendaApp.Domain.Interfaces
 {
     public interface IUserRepository
@@ -8,4 +6,4 @@ namespace AgendaApp.Domain.Interfaces
         Task<User> GetByIdAsync(Guid id);
         Task AddAsync(User user);
     }
-} 
+}

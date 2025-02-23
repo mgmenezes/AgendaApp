@@ -1,4 +1,3 @@
-// AgendaApp.API/Controllers/AuthController.cs
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -20,9 +19,9 @@ public class AuthController : ControllerBase
         try
         {
             _logger.LogInformation($"Tentativa de login para o email: {loginDto.Email}");
-            
+
             var result = await _authService.LoginAsync(loginDto);
-            
+
             _logger.LogInformation($"Login bem-sucedido para o email: {loginDto.Email}");
             return Ok(result);
         }

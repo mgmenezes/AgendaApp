@@ -1,10 +1,6 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
 using AutoMapper;
 using AgendaApp.Application.DTOs;
-using AgendaApp.Application.Services;
 using AgendaApp.Domain.Interfaces;
 namespace AgendaApp.Application.Queries.Contatos.ObterContatoPorId
 {
@@ -30,4 +26,4 @@ namespace AgendaApp.Application.Queries.Contatos.ObterContatoPorId
             return _mapper.Map<ContatoDto>(contato);
         }
     }
-} 
+}

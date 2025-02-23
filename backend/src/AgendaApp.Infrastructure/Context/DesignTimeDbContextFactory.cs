@@ -1,4 +1,3 @@
-// AgendaApp.Infrastructure/Context/DesignTimeDbContextFactory.cs
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;

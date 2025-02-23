@@ -1,58 +1,58 @@
 // src/views/LoginView.vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
-const email = ref('')
-const password = ref('')
-const errorMessage = ref('')
-const isLoading = ref(false)
+const router = useRouter();
+const email = ref("");
+const password = ref("");
+const errorMessage = ref("");
+const isLoading = ref(false);
 
 const handleLogin = async () => {
   try {
-    isLoading.value = true
-    errorMessage.value = ''
+    isLoading.value = true;
+    errorMessage.value = "";
 
     // Aqui vamos implementar a chamada para a API de autenticação
-    const response = await fetch('http://localhost:5162/api/auth/login', {
-      method: 'POST',
+    const response = await fetch("http://localhost:5162/api/auth/login", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: email.value,
         password: password.value,
       }),
-    })
+    });
 
     if (!response.ok) {
-      throw new Error('Credenciais inválidas')
+      throw new Error("Credenciais inválidas");
     }
 
-    const data = await response.json()
+    const data = await response.json();
     // Armazenar o token
-    localStorage.setItem('token', data.token)
-    
-    // Redirecionar para a agenda
-    router.push('/agenda')
+    localStorage.setItem("token", data.token);
+
+    // Redirecionar para a homepage
+    router.push("/");
   } catch (error) {
-    errorMessage.value = 'Email ou senha incorretos'
+    errorMessage.value = "Email ou senha incorretos";
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 </script>
 
 <template>
   <div class="login-container">
     <div class="login-card">
       <h1 class="login-title">Login</h1>
-      
+
       <form @submit.prevent="handleLogin" class="login-form">
         <div class="form-group">
           <label for="email">Email</label>
-          <input 
+          <input
             id="email"
             v-model="email"
             type="email"
@@ -64,7 +64,7 @@ const handleLogin = async () => {
 
         <div class="form-group">
           <label for="password">Senha</label>
-          <input 
+          <input
             id="password"
             v-model="password"
             type="password"
@@ -78,12 +78,8 @@ const handleLogin = async () => {
           {{ errorMessage }}
         </div>
 
-        <button 
-          type="submit" 
-          class="login-button"
-          :disabled="isLoading"
-        >
-          {{ isLoading ? 'Carregando...' : 'Entrar' }}
+        <button type="submit" class="login-button" :disabled="isLoading">
+          {{ isLoading ? "Carregando..." : "Entrar" }}
         </button>
       </form>
     </div>

@@ -1,4 +1,3 @@
-// AgendaApp.Infrastructure/Repositories/ContatoRepository.cs
 using AgendaApp.Domain.Entities;
 using AgendaApp.Domain.Interfaces;
 using AgendaApp.Infrastructure.Context;
@@ -37,7 +36,7 @@ namespace AgendaApp.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-            public async Task<Contato?> ObterPorEmailAsync(string email)
+        public async Task<Contato?> ObterPorEmailAsync(string email)
         {
             return await _context.Contatos
                 .FirstOrDefaultAsync(c => c.Email == email);
@@ -49,7 +48,7 @@ namespace AgendaApp.Infrastructure.Repositories
             return contato;
         }
 
-         public async Task AtualizarAsync(Contato contato)
+        public async Task AtualizarAsync(Contato contato)
         {
             _context.Entry(contato).State = EntityState.Modified;
             await Task.CompletedTask; // Resolvendo o warning do método assíncrono

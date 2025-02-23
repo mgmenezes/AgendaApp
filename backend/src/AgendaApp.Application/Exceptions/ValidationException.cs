@@ -1,4 +1,3 @@
-// AgendaApp.Application/Exceptions/ValidationException.cs
 using FluentValidation.Results;
 
 namespace AgendaApp.Application.Exceptions
@@ -9,8 +8,8 @@ namespace AgendaApp.Application.Exceptions
         {
             Errors = new List<ValidationFailure>();
         }
-        
-        public ValidationException(IEnumerable<ValidationFailure> errors) 
+
+        public ValidationException(IEnumerable<ValidationFailure> errors)
             : base("Ocorreram erros de validação.")
         {
             Errors = errors;

@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using MediatR;
 using AutoMapper;
 using AgendaApp.Application.DTOs;
-using AgendaApp.Domain.Entities;
 using AgendaApp.Domain.Interfaces;
 
 namespace AgendaApp.Application.Queries.Contatos.ObterContatos
@@ -31,4 +26,4 @@ namespace AgendaApp.Application.Queries.Contatos.ObterContatos
             return _mapper.Map<IEnumerable<ContatoDto>>(contatos);
         }
     }
-} 
+}

@@ -1,14 +1,13 @@
-// AgendaApp.Infrastructure/UnitOfWork.cs (note a mudança no nome do arquivo)
 using AgendaApp.Domain.Interfaces;
 using AgendaApp.Infrastructure.Context;
-using AgendaApp.Infrastructure.Repositories; // Adicionando a referência ao namespace dos repositórios
+using AgendaApp.Infrastructure.Repositories;
 
 namespace AgendaApp.Infrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AgendaContext _context;
-        private IContatoRepository? _contatoRepository; // Tornando nullable para resolver o warning
+        private IContatoRepository? _contatoRepository;
 
         public UnitOfWork(AgendaContext context)
         {

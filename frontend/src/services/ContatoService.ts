@@ -1,4 +1,3 @@
-// src/services/ContatoService.ts
 import type { Contato, ContatoInput } from "../types/Contato";
 import { api } from "./Api";
 import { AuthService } from "./AuthService";

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ContatoService } from '../ContatoService'
 import { api } from '../Api'
 
-// Mock do módulo Api
+
 vi.mock('../Api', () => ({
   api: {
     get: vi.fn(),

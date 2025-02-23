@@ -1,55 +1,56 @@
 // src/views/ContatosList.vue
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { ContatoService } from '../services/ContatoService'
-import type { Contato } from '../types/Contato'
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { ContatoService } from "../services/ContatoService";
+import type { Contato } from "../types/Contato";
 // import Button from 'primevue/button';
-import ProgressSpinner from 'primevue/progressspinner';
-import { useToast } from 'primevue/usetoast'
-import Toast from 'primevue/toast'
+import ProgressSpinner from "primevue/progressspinner";
+import { useToast } from "primevue/usetoast";
+import Toast from "primevue/toast";
 
-const contatos = ref<Contato[]>([])
-const router = useRouter()
-const isLoading = ref(true)
-const errorMessage = ref<string | null>(null)
-const toast = useToast()
+const contatos = ref<Contato[]>([]);
+const router = useRouter();
+const isLoading = ref(true);
+const errorMessage = ref<string | null>(null);
+const toast = useToast();
 
 async function loadContatos() {
   try {
-    isLoading.value = true
-    errorMessage.value = null
-    contatos.value = await ContatoService.listar()
+    isLoading.value = true;
+    errorMessage.value = null;
+    contatos.value = await ContatoService.listar();
   } catch (error) {
-    errorMessage.value = 'Não foi possível carregar os contatos. Por favor, verifique sua conexão e tente novamente.'
-    console.error('Erro ao carregar contatos:', error)
+    errorMessage.value =
+      "Não foi possível carregar os contatos. Por favor, verifique sua conexão e tente novamente.";
+    console.error("Erro ao carregar contatos:", error);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
 }
 
 const handleInativar = async (id: string) => {
   try {
-    await ContatoService.inativar(id)
-    await loadContatos()
+    await ContatoService.inativar(id);
+    await loadContatos();
     toast.add({
-      severity: 'success',
-      summary: 'Sucesso',
-      detail: 'Contato removido com sucesso!',
-      life: 3000
-    })
+      severity: "success",
+      summary: "Sucesso",
+      detail: "Contato removido com sucesso!",
+      life: 3000,
+    });
   } catch (error) {
-    console.error('Erro ao inativar contato:', error)
+    console.error("Erro ao inativar contato:", error);
     toast.add({
-      severity: 'error',
-      summary: 'Erro',
-      detail: 'Não foi possível remover o contato. Tente novamente.',
-      life: 3000
-    })
+      severity: "error",
+      summary: "Erro",
+      detail: "Não foi possível remover o contato. Tente novamente.",
+      life: 3000,
+    });
   }
-}
+};
 
-onMounted(loadContatos)
+onMounted(loadContatos);
 </script>
 
 <template>
@@ -58,7 +59,7 @@ onMounted(loadContatos)
     <!-- Header com título e botão -->
     <div class="header">
       <h1 class="title">Agenda de Contatos</h1>
-      <PButton 
+      <PButton
         class="button button-primary"
         @click="router.push('/contato/novo')"
       >
@@ -66,33 +67,36 @@ onMounted(loadContatos)
       </PButton>
     </div>
 
-    <!-- Container principal -->
     <div class="main-content">
-      <!-- Estado de carregamento -->
       <div v-if="isLoading" class="loading-state">
         <ProgressSpinner />
         <p class="loading-text">Carregando seus contatos...</p>
       </div>
 
-      <!-- Estado de erro -->
       <div v-else-if="errorMessage" class="error-container">
         <div class="error-content">
           <span class="error-icon">⚠</span>
           <p class="error-message">{{ errorMessage }}</p>
-          <PButton 
-            class="button button-retry"
-            @click="loadContatos"
-          >
+          <PButton class="button button-retry" @click="loadContatos">
             Tentar Novamente
           </PButton>
         </div>
       </div>
 
-      <!-- Lista de contatos -->
       <div v-else class="contacts-grid">
-        <div v-for="contato in contatos" 
-             :key="contato.id" 
-             class="contact-card">
+        <div v-if="contatos.length === 0" class="empty-state">
+          <i class="pi pi-users empty-icon"></i>
+          <p class="empty-message">Nenhum contato cadastrado</p>
+          <p class="empty-submessage">
+            Clique no botão "Novo Contato" para começar
+          </p>
+        </div>
+        <div
+          v-else
+          v-for="contato in contatos"
+          :key="contato.id"
+          class="contact-card"
+        >
           <div class="card-header">
             <h3 class="contact-name">{{ contato.nome }}</h3>
           </div>
@@ -107,13 +111,13 @@ onMounted(loadContatos)
             </div>
           </div>
           <div class="card-actions">
-            <button 
+            <button
               class="button button-secondary"
               @click="router.push(`/contato/${contato.id}`)"
             >
               Editar
             </button>
-            <PButton 
+            <PButton
               class="button button-danger"
               @click="handleInativar(contato.id)"
             >
@@ -127,13 +131,11 @@ onMounted(loadContatos)
 </template>
 
 <style scoped>
-/* Container principal */
 .container {
   margin: 0 auto;
   padding: 20px;
 }
 
-/* Estilização do header */
 .header {
   display: flex;
   justify-content: space-between;
@@ -151,8 +153,9 @@ onMounted(loadContatos)
   color: #333;
 }
 
-/* Container principal de conteúdo */
 .main-content {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   min-height: 600px;
   background-color: white;
@@ -161,7 +164,6 @@ onMounted(loadContatos)
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Estado de carregamento */
 .loading-state {
   display: flex;
   flex-direction: column;
@@ -175,7 +177,6 @@ onMounted(loadContatos)
   color: #666;
 }
 
-/* Estado de erro */
 .error-container {
   display: flex;
   justify-content: center;
@@ -207,14 +208,12 @@ onMounted(loadContatos)
   margin: 0;
 }
 
-/* Grid de contatos */
 .contacts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
-/* Card de contato */
 .contact-card {
   background-color: white;
   border-radius: 8px;
@@ -264,7 +263,6 @@ onMounted(loadContatos)
   border-top: 1px solid #e5e7eb;
 }
 
-/* Botões */
 .button {
   padding: 8px 16px;
   border-radius: 6px;
@@ -283,7 +281,6 @@ onMounted(loadContatos)
   background-color: #fee2e2;
 }
 
-/* Media queries para responsividade */
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
@@ -294,5 +291,35 @@ onMounted(loadContatos)
   .contacts-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12rem;
+  text-align: center;
+  width: 100%;
+  grid-column: 1 / -1;
+}
+
+.empty-icon {
+  font-size: 48px;
+  color: #9ca3af;
+  margin-bottom: 16px;
+}
+
+.empty-message {
+  font-size: 20px;
+  font-weight: 500;
+  color: #4b5563;
+  margin: 0 0 8px 0;
+}
+
+.empty-submessage {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
 }
 </style>

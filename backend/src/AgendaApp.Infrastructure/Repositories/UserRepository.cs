@@ -1,4 +1,3 @@
-using AgendaApp.Domain.Entities;
 using AgendaApp.Domain.Interfaces;
 using AgendaApp.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -30,4 +29,4 @@ namespace AgendaApp.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
     }
-} 
+}

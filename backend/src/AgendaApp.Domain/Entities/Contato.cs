@@ -1,7 +1,3 @@
-// AgendaApp.Domain/Entities/Contato.cs
-using System;
-using AgendaApp.Domain.Exceptions;
-
 namespace AgendaApp.Domain.Entities
 {
     public class Contato

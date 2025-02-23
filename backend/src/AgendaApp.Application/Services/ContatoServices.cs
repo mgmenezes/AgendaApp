@@ -1,7 +1,3 @@
-// AgendaApp.Application/Services/ContatoService.cs
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation;
 using AgendaApp.Domain.Entities;
@@ -15,7 +11,7 @@ namespace AgendaApp.Application.Services
 
     {
         private readonly IUnitOfWork _unitOfWork;
-                private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly IValidator<CriarContatoDto> _criarValidator;
         // private readonly IValidator<AtualizarContatoDto> _atualizarValidator;
         private readonly IMessageBusService _messageBusService;
@@ -35,7 +31,6 @@ namespace AgendaApp.Application.Services
             // _atualizarValidator = atualizarValidator;
         }
 
-        // Implementação dos métodos da interface
         public async Task<ContatoDto> ObterPorIdAsync(Guid id)
         {
             var contato = await _unitOfWork.ContatoRepository.ObterPorIdAsync(id);
@@ -53,19 +48,19 @@ namespace AgendaApp.Application.Services
 
         public async Task<ContatoDto> CriarAsync(CriarContatoDto dto)
         {
-            // Validação dos dados de entrada
+
             await _criarValidator.ValidateAndThrowAsync(dto);
 
-            // Verificação de email duplicado
+
             if (await _unitOfWork.ContatoRepository.ExisteEmailAsync(dto.Email))
                 throw new ValidationException("Email já cadastrado");
 
-            // Criação do novo contato
+
             var contato = _mapper.Map<Contato>(dto);
             await _unitOfWork.ContatoRepository.AdicionarAsync(contato);
             await _unitOfWork.CommitAsync();
 
-            // Publicação da mensagem no RabbitMQ
+
             _messageBusService.PublishMessage("contato-queue", contato);
 
             return _mapper.Map<ContatoDto>(contato);
@@ -77,12 +72,12 @@ namespace AgendaApp.Application.Services
             if (contato == null)
                 throw new NotFoundException($"Contato com Id {dto.Id} não encontrado");
 
-            // Verifica se o novo email já existe para outro contato
+
             var contatoExistente = await _unitOfWork.ContatoRepository.ObterPorEmailAsync(dto.Email);
             if (contatoExistente != null && contatoExistente.Id != dto.Id)
                 throw new ValidationException("Email já está em uso por outro contato");
 
-            // Atualiza os dados
+
             var contatoAtualizado = _mapper.Map(dto, contato);
             contatoAtualizado.DataAtualizacao = DateTime.UtcNow;
             await _unitOfWork.ContatoRepository.AtualizarAsync(contatoAtualizado);
@@ -103,12 +98,12 @@ namespace AgendaApp.Application.Services
             await _unitOfWork.ContatoRepository.InativarAsync(id);
             await _unitOfWork.CommitAsync();
 
-            // Publicação da mensagem no RabbitMQ
+
             _messageBusService.PublishMessage("contato-queue", contato);
         }
     }
 
-    // Classe de exceção personalizada para registros não encontrados
+
     public class NotFoundException : Exception
     {
         public NotFoundException(string message) : base(message) { }

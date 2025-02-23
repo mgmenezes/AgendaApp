@@ -1,4 +1,3 @@
-// AgendaApp.API/Configuration/AutoMapperConfig.cs
 using AutoMapper;
 using AgendaApp.Domain.Entities;
 using AgendaApp.Application.DTOs;
