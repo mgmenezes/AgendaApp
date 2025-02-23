@@ -1,0 +1,54 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio files
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Node.js
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Environment files
+*.env
+appsettings.json
+appsettings.*.json
+launchSettings.json
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+backend/src/AgendaApp.Infrastructure/obj/Debug/net9.0/AgendaApp.Infrastructure.AssemblyInfo.cs
+backend/src/AgendaApp.API/obj/Debug/net9.0/AgendaApp.API.pdb
+backend/src/AgendaApp.API/bin/Debug/net9.0/AgendaApp.API.pdb
+backend/src/AgendaApp.Application/obj/Debug/net9.0/AgendaApp.Application.AssemblyInfo.cs
+backend/src/AgendaApp.Application/bin/Debug/net9.0/AgendaApp.Application.pdb
+backend/src/AgendaApp.Domain/obj/Debug/net9.0/AgendaApp.Domain.AssemblyInfo.cs
+backend/src/AgendaApp.Domain/bin/Debug/net9.0/AgendaApp.Domain.pdb
+
+
+backend/src/AgendaApp.API/obj/Debug/net9.0/AgendaApp.API.AssemblyInfo.cs
