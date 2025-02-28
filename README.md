@@ -5,7 +5,7 @@ AgendaApp é uma aplicação de gerenciamento de contatos desenvolvida com .NET 
 ## Tecnologias Utilizadas
 
 - **Backend**: 
-  - .NET 6
+  - .NET 9
   - Entity Framework Core
   - RabbitMQ para mensageria
   - FluentValidation para validação de dados
